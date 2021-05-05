@@ -35,7 +35,7 @@
     <img src="images/logo.png" alt="Logo" width="160" height="160">
   </a>
 
-  <h3 align="center">SwichBlox Nano Firmware</h3>
+  <h3 align="center">SwichBlox Nano Firmware (In Development) </h3>
 
   <p align="center">
     Firmware created by BotBlox to configure settings on our products
