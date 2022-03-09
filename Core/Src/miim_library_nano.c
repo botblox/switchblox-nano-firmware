@@ -107,7 +107,7 @@ void _MIIM_DRIVER_START() {
 	// Preamble
 	//HAL_GPIO_WritePin(GPIOA, MIIM_MDIO_Pin, GPIO_PIN_SET);
 
-	for (uint8_t i=0; i<5; ++i) {
+	for (uint8_t i=0; i<32; ++i) {
 		_MIIM_DRIVER_CLOCK_PULSE();
 	}
 
