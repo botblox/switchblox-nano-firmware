@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "miim_library_nano.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -146,11 +147,26 @@ void Write_Commands_To_IC() {
 		// We are going to assume that for now, the data is sent with the smallest byte [0:7] bits first, then [8:15]
 		Data = ((uint16_t) Commands_Total[Cmd_Index][3] << 8) | (Commands_Total[Cmd_Index][2]);
 
-		for(Generic_Index = 0; Generic_Index <= 10; Generic_Index++) {
-			MIIM_DRIVER_WRITE(PHY, REG, Data);
-			HAL_Delay(1);
-		}
+		MIIM_DRIVER_WRITE(PHY, REG, Data);
+		MDIO_WAIT(1);
 	}
+
+	// Uncomment the following code to verify what was written to the MCU
+	/*
+	for(uint8_t Cmd_Index = 0; Cmd_Index < maximum_commands; Cmd_Index++) {
+		PHY = Commands_Total[Cmd_Index][0];
+		REG = Commands_Total[Cmd_Index][1];
+		if(PHY < 2 || PHY > 24 || REG < 0 || REG > 32) {
+			break;
+		}
+
+		// To verify what was written to the switch chip, add "dynamic printf"-type breakpoint to the following MDIO_WAIT line.
+		// "%u:%02u 0x%02x 0x%02x (%u %u)\n", PHY, REG, Data & 0xFF, (Data >> 8) & 0xFF, Data & 0xFF, (Data >> 8) & 0xFF
+		Data = MIIM_DRIVER_READ(PHY, REG);
+		MDIO_WAIT(1);
+	}
+	// */
+
 }
 
 
@@ -297,26 +313,11 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   HAL_Delay(1000);
   Configuration_From_Eeprom();
 
   HAL_UART_Receive_DMA(&huart2, Buffer_Rx, buffer_size);
-
-//  Commands_Total[0][0] = 23;
-//  Commands_Total[0][1] = 16;
-//  Commands_Total[0][2] = 20;
-//  Commands_Total[0][3] = 8;
-//  Commands_Total[1][0] = 23;
-//  Commands_Total[1][1] = 17;
-//  Commands_Total[1][2] = 20;
-//  Commands_Total[1][3] = 0;
-//  Commands_Total[2][0] = 23;
-//  Commands_Total[2][1] = 18;
-//  Commands_Total[2][2] = 255;
-//  Commands_Total[2][3] = 255;
-//  Is_Commands_Ready = 1;
-//  Write_Commands_To_IC();
-  //23, 16, 12, 12], [23, 17, 16, 0], [23, 18, 255, 255], [100, 0, 0, 0]]
 
   /* USER CODE END 2 */
 
